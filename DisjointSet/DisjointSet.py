@@ -3,7 +3,7 @@ class DisjointSet(object):
     def __init__(self,n):
         self.parent = [i for i in range(n)]
         self.size = [1 for i in range(n)]
-        self.kinds=n
+        self.groups=n
 
     def FindRoot(self,x):
         if self.parent[x] == x:
@@ -12,7 +12,7 @@ class DisjointSet(object):
             self.parent[x] = self.FindRoot(self.parent[x])
             return self.parent[x]
 
-    def Union_Sets(self,x,y):
+    def UnionSets(self,x,y):
         root1=self.FindRoot(x)
         root2=self.FindRoot(y)
 
@@ -22,7 +22,7 @@ class DisjointSet(object):
         if root1 == root2:
             return
 
-        self.kinds-=1
+        self.groups-=1
         if self.size[root1] >= self.size[root2]:
             self.parent[root2]=root1
             self.size[root1]+=self.size[root2]
@@ -30,14 +30,18 @@ class DisjointSet(object):
             self.parent[root1]=root2
             self.size[root2]+=self.size[root1]
 
-    def Same_Set(self,x,y):
+    def SameSet(self,x,y):
         return self.FindRoot(x)==self.FindRoot(y)
+
+    def GroupSize(self, x):
+        return self.size[self.FindRoot(x)]
 
 if __name__ == "__main__":
     ds=DisjointSet(10)
-    for i in range(0,7,2):
-        ds.Union_Sets(i,i+2)
-    assert 6==ds.kinds
-    assert 0==ds.FindRoot(6)
-    assert True==ds.Same_Set(2,8)
-    assert False==ds.Same_Set(1,8)
+    for i in range(2,7,2):
+        ds.UnionSets(i,i+2)
+    ds.UnionSets(8,0)
+    assert 6==ds.groups
+    assert True==ds.SameSet(2,8)
+    assert False==ds.SameSet(1,8)
+    assert 5==ds.GroupSize(4)
