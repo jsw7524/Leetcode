@@ -17,7 +17,6 @@ sln=Solution()
 
 
 assert 585==sln.timeRequiredToBuy([88,76,77,82,62,20,26,72,45,54],2) 
-
 assert 154==sln.timeRequiredToBuy([84,49,5,24,70,77,87,8],3) 
 assert 8==sln.timeRequiredToBuy(tickets = [5,1,1,1], k = 0)    
 assert 6==sln.timeRequiredToBuy(tickets = [2,3,2], k = 2)    
