@@ -3,7 +3,7 @@ class SparseTableRMQ(object):
     def __init__(self, data, minimum=True) -> None:
         self.func= min if minimum else max
         n=len(data)
-        logN=math.ceil(math.log(n))+1
+        logN=math.ceil(math.log2(n))+1
         self.table=[[data[i] for j in range(logN)] for i in range(n)]
         for j in range(1,logN):    
             for i in range(n):
@@ -16,7 +16,7 @@ class SparseTableRMQ(object):
     def Query(self, left, right):
         if left==right:
             return self.table[left][0]
-        distanceLog=math.ceil(math.log(right-left))
+        distanceLog=math.floor(math.log2(right-left+1))
         return self.func(self.table[left][distanceLog],self.table[right-(2**distanceLog)+1][distanceLog])
 
 stRMQ=SparseTableRMQ(data=[i for i in range(1000)],minimum=False)
@@ -50,3 +50,11 @@ assert 3==stRMQ.Query(8,8)
 assert 1==stRMQ.Query(1,8)
 assert 0==stRMQ.Query(0,8)
 
+import random
+random.seed(7524)
+test=[random.randint(-2**8,2**8) for i in range(1000)]
+stRMQ=SparseTableRMQ(test)
+assert min(test[11:478+1])==stRMQ.Query(11,478)
+assert min(test[210:397+1])==stRMQ.Query(210,397)
+assert min(test[110:497+1])==stRMQ.Query(110,497)
+assert min(test[0:999+1])==stRMQ.Query(0,999)
