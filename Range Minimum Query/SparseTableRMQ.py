@@ -52,9 +52,24 @@ assert 0==stRMQ.Query(0,8)
 
 import random
 random.seed(7524)
-test=[random.randint(-2**8,2**8) for i in range(1000)]
+test=[random.randint(-2**8,2**8) for i in range(999)]
 stRMQ=SparseTableRMQ(test)
 assert min(test[11:478+1])==stRMQ.Query(11,478)
 assert min(test[210:397+1])==stRMQ.Query(210,397)
 assert min(test[110:497+1])==stRMQ.Query(110,497)
 assert min(test[0:999+1])==stRMQ.Query(0,999)
+
+# sizeArray=9999
+# sizeQuery=200
+# random.seed(12345)
+# test=[random.randint(-2**8,2**8) for i in range(sizeArray)]
+# print(*test,file=open("test.txt","w"))
+# print(sizeQuery,file=open("test.txt","a"))
+# stRMQ=SparseTableRMQ(test)
+# for p in range(sizeQuery):
+#     l,r=random.randint(0,sizeArray//4),random.randint(sizeArray//4+sizeArray//2,sizeArray)
+#     if l > r:
+#         l,r=r,l
+#     print(l,r,file=open("test.txt","a"))
+#     print(stRMQ.Query(l,r),file=open("answer.txt","a"))
+    
