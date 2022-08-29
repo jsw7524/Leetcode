@@ -62,9 +62,95 @@ class LetExpression:
         return self.expression.evaluate()
 
 class Parser:
-    def parse(self, tokens, index):
-        for t in tokens:
-        
+    # LL Parser cannot use left recursion Grammar
+    # Grammar:
+    # S -> LET | MUL | ADD
+    # LET -> ( let VE EXPR )
+    # VE -> VAR EXPR VE | EMPTY
+    # EXPR -> VAR | NUM | LET | MUL | ADD
+    # MUL -> ( mul EXPR EXPR )
+    # ADD -> ( add EXPR EXPR )
+    def parse(self, s):
+        tokens=tokenizer.getTokens(s)
+        return self.LET(tokens,0)
+
+    def LET(self, tokens, position):
+        if self.LP( tokens, position): 
+            if "let"==tokens[position+1].TypeName:
+                s1=self.VE( tokens, position+2)
+                if s1>=0:
+                    s2=self.EXPR(tokens, position +2 + s1)
+                    if s2 >=1:
+                        if self.RP( tokens, position+2+ s1+s2)==1:
+                            return 2+ s1+s2+1
+        return 0
+    
+    def MUL(self, tokens, position):
+        if self.LP( tokens, position): 
+            if "mult"==tokens[position+1].TypeName:
+                s1=self.EXPR( tokens, position+2)
+                if s1 >=1:
+                    s2=self.EXPR( tokens, position+2+s1)
+                    if s2 >= 1:
+                        if self.RP( tokens, position+2+ s1+s2) ==1:
+                            return  2+ s1+s2+1
+        return 0      
+      
+    def ADD(self, tokens, position):
+        if self.LP( tokens, position): 
+            if "add"==tokens[position+1].TypeName:
+                s1=self.EXPR( tokens, position+2)
+                if s1 >=1:
+                    s2=self.EXPR( tokens, position+2+s1)
+                    if s2 >= 1:
+                        if self.RP( tokens, position+2+ s1+s2) ==1:
+                            return  2+ s1+s2+1
+        return 0 
+                             
+    def EXPR(self, tokens, position):
+        if self.VAR(tokens, position):
+            return 1
+        if self.NUM(tokens, position):
+            return 1
+        s1=self.LET(tokens, position)
+        if s1>0:
+            return s1
+        s2=self.MUL(tokens, position)
+        if s2 >0:
+            return s2       
+        s3=self.ADD(tokens, position)
+        if s3 >0:
+            return s3
+        return 0       
+                
+    def VE(self, tokens, position):
+        if 1==self.VAR(tokens, position):
+            s1=self.EXPR( tokens, position + 1) 
+            if s1 >= 1:
+                s2=self.VE( tokens, position +1 + s1)
+                if s2 >=0:
+                    return  1 + s1 + s2
+        return 0   
+   
+    def NUM(self, tokens, position):
+        if "int" == tokens[position].TypeName:
+            return 1
+        return 0
+ 
+    def VAR(self, tokens, position):
+        if "var" == tokens[position].TypeName:
+            return 1
+        return 0       
+
+    def LP(self, tokens, position):
+        if "lp" == tokens[position].TypeName:
+            return 1
+        return 0 
+    
+    def RP(self, tokens, position):
+        if "rp" == tokens[position].TypeName:
+            return 1
+        return 0     
 
 class Solution:
     def evaluate(self, expression: str) -> int:
@@ -91,11 +177,18 @@ assert 6 == multExpression.evaluate()
 testExpression= MultExpression(AddExpression(constNumber1,constNumber3),constNumber2)
 assert 8 == testExpression.evaluate()
 ##########################################################################   
-variableX = VariableExpression("x")
-letExpression = LetExpression([(variableX,constNumber3), (variableX,constNumber2)],variableX,[])
-assert 2==letExpression.evaluate()
+# variableX = VariableExpression("x")
+# letExpression = LetExpression([(variableX,constNumber3), (variableX,constNumber2)],variableX,[])
+# assert 2==letExpression.evaluate()
 ##########################################################################   
-variableX = VariableExpression("x")
-testExpression= MultExpression(AddExpression(constNumber1,constNumber3),constNumber2)
-letExpression = LetExpression([(variableX,constNumber1),(variableX,constNumber2), (variableX,testExpression)],variableX,[])
-assert 8==letExpression.evaluate()
+# variableX = VariableExpression("x")
+# testExpression= MultExpression(AddExpression(constNumber1,constNumber3),constNumber2)
+# letExpression = LetExpression([(variableX,constNumber1),(variableX,constNumber2), (variableX,testExpression)],variableX,[])
+# assert 8==letExpression.evaluate()
+########################################################
+parser=Parser()
+
+parser.parse("(let x 2 (mult x (let x 3 y 4 (add x y))))")
+
+# parser.parse("(let x 1 y 2 x (add x y) (add x y))")
+# parser.parse("(let x 3 x 2 x)")
