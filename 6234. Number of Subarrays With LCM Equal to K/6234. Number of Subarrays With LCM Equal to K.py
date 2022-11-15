@@ -6,25 +6,19 @@ class Solution:
     
     def GCD(self,a,b):
         while a%b!=0:
-            tmp=a
-            a=b
-            b=tmp%b
+            a, b = b, a%b
         return b
     
     def subarrayLCM(self, nums: List[int], k: int) -> int:
         n = len(nums)
         answer=0
         for i in range(n):
-            if k==nums[i]:
-                answer+=1
             lcm=nums[i]
-            for j in range(i+1,n):
-                ##########################
+            for j in range(i,n):
                 lcm=self.LCM(lcm,nums[j])
                 if lcm > k:
                     break
-                ##########################
-                if k==lcm:
+                elif lcm==k:
                     answer+=1
         return answer
     
