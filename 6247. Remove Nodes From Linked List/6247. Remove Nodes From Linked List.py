@@ -16,7 +16,7 @@ class Solution:
         maxRight=0
         anchor=ListNode()
         for v in values[::-1]:
-            if  v > maxRight:
+            if  v >= maxRight:
                 newNode=ListNode(v, anchor.next)
                 anchor.next=newNode
             maxRight=max(maxRight,v)                
