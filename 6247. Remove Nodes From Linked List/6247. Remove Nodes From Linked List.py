@@ -22,10 +22,3 @@ class Solution:
             maxRight=max(maxRight,v)                
         return anchor.next
         
-
-            
-            
-            
-            
-        
-        
