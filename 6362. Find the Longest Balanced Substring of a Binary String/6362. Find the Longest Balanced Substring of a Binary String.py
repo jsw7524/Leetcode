@@ -1,10 +1,8 @@
 class Solution:
     def findTheLongestBalancedSubstring(self, s: str) -> int:
-        len0=0
-        len1=0
-        maxBS=0
+        len0,len1,maxBS=0,0,0
         state='part0'
-        for i,ch in enumerate(s):
+        for ch in s:
             if state=='part0':
                 if ch == '0': 
                     len0+=1
