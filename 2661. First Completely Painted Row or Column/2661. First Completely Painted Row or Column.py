@@ -13,7 +13,7 @@ class Solution:
         for i,a in enumerate(arr):
             y, x, v = location[a]
             columns[x].append(v)
-            rows[y].append(v)  
+            rows[y].append(v)
             if len(columns[x]) == m or len(rows[y]) == n:
                 return i
         return -1
