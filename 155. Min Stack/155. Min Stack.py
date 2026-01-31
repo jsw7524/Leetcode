@@ -2,7 +2,7 @@ class MinStack:
     def __str__(self):
         result="stack\n"
         for elm in self.data[::-1]:
-            result=str(elm)+" "
+            result+=str(elm)+" "
         return result
 
     def __init__(self):
