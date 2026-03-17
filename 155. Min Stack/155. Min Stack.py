@@ -33,7 +33,7 @@ class MinStack:
         return self.data[-1]
         
 
-    def getMin(self) -> int:
+    def getMin(self):
         print("getMin")        
         if self.length == 0:
             return None

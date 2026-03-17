@@ -1,0 +1,112 @@
+class MaxHeap:
+
+    def __init__(self, data):
+        self.heap = [0]
+        self.heap.extend(data)
+        self.size = len(self.heap)-1
+
+        for i in range(self.size//2, 0, -1):
+            self.goDown(i)
+      
+    def goUp(self, i):
+        while i > 1:
+            if  self.heap[i] > self.heap[i//2]:
+                self.heap[i//2], self.heap[i] = self.heap[i], self.heap[i//2]
+            else:
+                break
+            i = i//2
+
+    def goDown(self, i):
+        while 2*i <= self.size:
+            maxChild = 2*i
+            if 2*i+1 <= self.size:
+                if self.heap[2*i] <= self.heap[2*i+1]:
+                    maxChild = 2*i+1
+            elif 2*i <= self.size:
+                maxChild = 2*i
+            else:
+                return
+            
+            if self.heap[i] < self.heap[maxChild]:
+                self.heap[i], self.heap[maxChild] = self.heap[maxChild], self.heap[i]
+                i = maxChild
+            else:
+                return            
+
+                
+    def peek_max(self):
+        return self.heap[1]
+
+    def pop_max(self):
+        maxVal=self.heap[1]
+        self.heap[1], self.heap[self.size] = self.heap[self.size], self.heap[1]
+        self.heap.pop()
+        self.size -= 1
+        #Sink 
+        self.goDown(1)
+        return maxVal
+
+    def insert(self, val):
+        self.heap.append(val)
+        self.size += 1
+        #Float up
+        self.goUp(self.size)
+
+
+def test1():
+    print("--- 测试 1: 初始化 ---")
+    data = [10, 20, 5, 15, 30]
+    heap = MaxHeap(data)
+    print(f"堆顶元素 (应为 30): {heap.peek_max()}")
+
+def test2():
+    # 2. 插入测试
+    print("\n--- 测试 2: 插入新元素 ---")
+    data = [10, 20, 5, 15, 30]
+    heap = MaxHeap(data)
+    heap.insert(40)
+    print(f"插入 40 后堆顶 (应为 40): {heap.peek_max()}")
+    heap.insert(25)
+    print(f"插入 25 后堆顶 (应为 40): {heap.peek_max()}")
+
+def test3():
+    # 3. 弹出最大元素测试
+    print("\n--- 测试 3: 弹出最大元素 ---")
+    data = [10, 20, 5, 15, 30]
+    heap = MaxHeap(data)
+    max_val = heap.pop_max()
+    print(f"弹出的最大元素 (应为 30): {max_val}")
+    print(f"弹出后堆顶 (应为 20): {heap.peek_max()}")
+
+def test4():
+    # 4. 连续弹出测试
+    print("\n--- 测试 4: 连续弹出最大元素 ---")
+    data = [10, 20, 5, 15, 30]
+    heap = MaxHeap(data)
+    while heap.size > 0:
+        max_val = heap.pop_max()
+        print(f"弹出的最大元素: {max_val}")
+     
+def test5():
+    myMaxHeap=MaxHeap([3,2,3,1,2,4,5,5,6])
+    k = 4
+    for i in range(k):
+        val=myMaxHeap.pop_max()
+        print(f"弹出的最大元素: {val}")
+
+
+def test6():
+    myMaxHeap=MaxHeap([3,1,2,4])
+    k = 4
+    for i in range(k):
+        val=myMaxHeap.pop_max()
+        print(f"弹出的最大元素: {val}")        
+      
+
+if __name__ == "__main__":
+    # test1()
+    # test2()
+    # test3()
+    # test4()
+    # test5()
+    test6()
